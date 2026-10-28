@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F8F3ED">
+<title>English at Work</title>
+<style>
+:root{
+  --crema:#F8F3ED; --marfil:#FFF8F0; --choc:#4B2E25; --marron:#674734;
+  --rosa:#EFD7D2; --arena:#EAD8C7; --terra:#BA8B72;
+  --ok:#6F8F5E; --okbg:#E4EEDB; --mal:#B5584B; --malbg:#F6DDD8;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--crema); color:var(--choc);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.45; font-size:16px;
+}
+.wrap{max-width:560px;margin:0 auto;padding:16px 16px 48px;padding-top:max(16px,env(safe-area-inset-top))}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;margin:0 0 6px;color:var(--choc)}
+h1{font-size:2rem}
+h2{font-size:1.5rem}
+h3{font-size:1.15rem;margin-top:22px}
+p{margin:0 0 10px}
+.sub{color:var(--marron);margin-bottom:14px}
+button{font-family:inherit;color:inherit}
+
+/* Tarjetas y botones */
+.card{background:var(--marfil);border:1px solid var(--arena);border-radius:18px;padding:16px;box-shadow:0 2px 0 rgba(75,46,37,.06)}
+.btn{display:block;width:100%;margin-top:12px;padding:14px 16px;border:0;border-radius:14px;background:var(--marron);color:#fff;font-size:1rem;font-weight:600;cursor:pointer}
+.btn:active{transform:scale(.98)}
+.btn.sec{background:var(--arena);color:var(--choc)}
+.btn.peq{padding:10px 14px;font-size:.95rem}
+.link{background:none;border:0;padding:6px 0;color:var(--marron);text-decoration:underline;cursor:pointer;font-size:.95rem}
+
+/* Inicio */
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{background:var(--rosa);border-radius:999px;padding:6px 12px;font-size:.92rem;font-weight:600}
+.nivelbox{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.subir{background:var(--okbg);border-color:var(--ok);margin-bottom:14px}
+.lista{display:grid;gap:10px}
+.juego,.nivel{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--marfil);border:1px solid var(--arena);border-radius:18px;padding:14px 16px;cursor:pointer;box-shadow:0 2px 0 rgba(75,46,37,.06)}
+.juego:active,.nivel:active{transform:scale(.98)}
+.juego .emo,.nivel .emo{font-size:1.8rem;width:44px;text-align:center}
+.juego .txt,.nivel .txt{flex:1}
+.juego b,.nivel b{display:block;font-size:1.05rem}
+.juego small,.nivel small{display:block;color:var(--marron)}
+.juego .est{color:var(--terra);letter-spacing:2px;font-size:1.05rem}
+.juego .est .v{color:var(--arena)}
+.pie{text-align:center;margin-top:26px}
+
+/* Marco de juego */
+.top{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.salir{width:40px;height:40px;border-radius:50%;border:0;background:var(--arena);font-size:1.1rem;cursor:pointer;flex:none}
+.bar{flex:1;height:12px;background:var(--arena);border-radius:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--terra);border-radius:8px;transition:width .3s}
+.vidas{flex:none;font-size:1.05rem;letter-spacing:1px}
+.tit{margin:0;flex:1}
+.consigna{font-weight:700;color:var(--marron);margin-bottom:12px}
+.ctx{font-style:italic;color:var(--marron)}
+.trad{color:var(--marron);margin-bottom:12px}
+
+/* Opciones */
+.opciones{margin-top:6px}
+.op{display:block;width:100%;text-align:left;margin:10px 0;padding:14px;background:var(--marfil);border:2px solid var(--arena);border-radius:14px;font-size:1rem;color:var(--choc);cursor:pointer}
+.op:active{transform:scale(.99)}
+.op:disabled{cursor:default;color:var(--choc);opacity:1}
+.op.ok{background:var(--okbg);border-color:var(--ok)}
+.op.mal{background:var(--malbg);border-color:var(--mal)}
+
+/* Completar */
+.frase{font-family:Georgia,"Times New Roman",serif;font-size:1.3rem;margin:6px 0 18px}
+.hueco{display:inline-block;min-width:80px;padding:0 8px;text-align:center;border-bottom:3px solid var(--terra);font-weight:700}
+
+/* Ordenar */
+.zona{min-height:68px;border:2px dashed var(--terra);border-radius:14px;padding:8px;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;background:var(--marfil)}
+.zona.zok{border-style:solid;border-color:var(--ok);background:var(--okbg)}
+.zona.zmal{border-style:solid;border-color:var(--mal);background:var(--malbg)}
+.pal{display:flex;flex-wrap:wrap;gap:8px;min-height:48px}
+.ficha{padding:9px 13px;border-radius:12px;border:2px solid var(--arena);background:var(--marfil);font-size:1rem;cursor:pointer;color:var(--choc)}
+.ficha:disabled{cursor:default;color:var(--choc);opacity:1}
+.btn:disabled{opacity:.45;cursor:default}
+
+/* Escuchar */
+.centro{text-align:center;margin:10px 0 14px}
+.vozgrande{width:120px;height:120px;border-radius:50%;border:0;background:var(--marron);color:#fff;font-size:2.2rem;cursor:pointer;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.vozgrande span{font-size:.85rem;font-weight:600}
+.vozgrande:active{transform:scale(.96)}
+
+/* Escenarios */
+.burbuja{display:flex;align-items:center;gap:12px;background:var(--rosa);border-radius:18px 18px 18px 4px;padding:14px;font-size:1.1rem;margin:10px 0 18px}
+.burbuja span{flex:1}
+.vozbtn{width:44px;height:44px;border-radius:50%;border:0;background:var(--marron);color:#fff;font-size:1.1rem;cursor:pointer;flex:none}
+
+/* Emparejar */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.col{display:grid;gap:10px;align-content:start}
+.m{min-height:58px;padding:10px 8px;border:2px solid var(--arena);border-radius:14px;background:var(--marfil);font-size:.98rem;cursor:pointer;color:var(--choc)}
+.m.sel{border-color:var(--marron);background:var(--rosa)}
+.m.hecho{background:var(--okbg);border-color:var(--ok);opacity:.75;pointer-events:none}
+.m.fallo{background:var(--malbg);border-color:var(--mal);animation:shake .35s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* Feedback */
+.fb{margin-top:16px}
+.fb>div,.fb.bien,.fb.mal{}
+.fb .fbc{}
+.fbbox{padding:14px;border-radius:14px;border:2px solid var(--arena);margin-top:14px}
+.fbbox.bien{background:var(--okbg);border-color:var(--ok)}
+.fbbox.mal{background:var(--malbg);border-color:var(--mal)}
+.fbbox p{margin:6px 0 0}
+
+/* Aprender */
+.filas{display:grid;gap:8px}
+.fila{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;padding:12px 14px;background:var(--marfil);border:1px solid var(--arena);border-radius:14px;cursor:pointer}
+.fila:active{background:var(--rosa)}
+.fila b{display:block}
+.fila small{color:var(--marron)}
+.fila .ico{font-size:1.2rem}
+
+/* Resultado */
+.fin{text-align:center;padding-top:36px}
+.estrellas{font-size:3rem;letter-spacing:6px;color:var(--arena);margin-bottom:6px}
+.estrellas .on{color:var(--terra)}
+.resumen{margin:14px 0;font-weight:600}
+
+/* Aviso */
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--choc);color:var(--crema);padding:10px 16px;border-radius:12px;font-size:.95rem;opacity:0;pointer-events:none;transition:.25s;max-width:90%;text-align:center;z-index:10}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<noscript><div class="wrap"><p>Esta aplicación necesita JavaScript activado.</p></div></noscript>
+
+<script src="contenido.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var app = document.getElementById('app');
+  var C = window.CONTENIDO;
+  if (!C || !C.niveles) {
+    app.innerHTML = '<div class="wrap"><h2>Falta el contenido</h2><p>No se encuentra el archivo <b>contenido.js</b>. Debe estar en la misma carpeta que index.html.</p></div>';
+    return;
+  }
+
+  /* ---------- Utilidades ---------- */
+  var KEY = 'englishAtWork.v1';
+  var ORDEN_NIVELES = Object.keys(C.niveles);
+
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function shuffle(a) {
+    var r = a.slice();
+    for (var i = r.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = r[i]; r[i] = r[j]; r[j] = t;
+    }
+    return r;
+  }
+  function sample(a, n) { return shuffle(a).slice(0, Math.min(n, a.length)); }
+
+  var toastTimer = null;
+  function toast(msg) {
+    var t = $('#toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.classList.remove('show'); }, 2600);
+  }
+
+  /* ---------- Progreso guardado en el dispositivo ---------- */
+  function def() { return { nivel: null, puntos: 0, racha: 0, ultimo: null, mejores: {}, jugadas: 0 }; }
+  function load() {
+    try {
+      var d = JSON.parse(localStorage.getItem(KEY));
+      if (d && typeof d === 'object') return Object.assign(def(), d);
+    } catch (e) {}
+    return def();
+  }
+  var S = load();
+  if (S.nivel && !C.niveles[S.nivel]) S.nivel = null;
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+  function fecha(d) {
+    var m = String(d.getMonth() + 1).padStart(2, '0');
+    var dd = String(d.getDate()).padStart(2, '0');
+    return d.getFullYear() + '-' + m + '-' + dd;
+  }
+  function hoy() { return fecha(new Date()); }
+  function ayer() { var d = new Date(); d.setDate(d.getDate() - 1); return fecha(d); }
+  function rachaActual() { return (S.ultimo === hoy() || S.ultimo === ayer()) ? S.racha : 0; }
+  function tocarRacha() {
+    var t = hoy();
+    if (S.ultimo === t) return;
+    S.racha = (S.ultimo === ayer()) ? S.racha + 1 : 1;
+    S.ultimo = t;
+  }
+
+  /* ---------- Voz en inglés (la del navegador) ---------- */
+  var hayVoz = ('speechSynthesis' in window) && ('SpeechSynthesisUtterance' in window);
+  var voz = null;
+  function cargarVoz() {
+    if (!hayVoz) return;
+    var vs = window.speechSynthesis.getVoices();
+    voz = vs.filter(function (v) { return /^en[-_]US/i.test(v.lang); })[0] ||
+          vs.filter(function (v) { return /^en/i.test(v.lang); })[0] || null;
+  }
+  if (hayVoz) {
+    cargarVoz();
+    window.speechSynthesis.onvoiceschanged = cargarVoz;
+  }
+  function decir(txt, lento) {
+    if (!hayVoz) { toast('Tu navegador no puede reproducir voz. Prueba con Chrome o Safari.'); return; }
+    try {
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(txt);
+      u.lang = 'en-US';
+      if (voz) u.voice = voz;
+      u.rate = lento ? 0.6 : 0.9;
+      window.speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+
+  /* ---------- Catálogo de juegos ---------- */
+  var JUEGOS = [
+    { id: 'aprender', emo: '📖', nombre: 'Aprender', desc: 'Vocabulario y frases útiles con audio' },
+    { id: 'match', emo: '🧩', nombre: 'Emparejar', desc: 'Une cada palabra con su significado' },
+    { id: 'cloze', emo: '✏️', nombre: 'Completar huecos', desc: 'Elige la palabra que falta' },
+    { id: 'orden', emo: '🔀', nombre: 'Ordenar frases', desc: 'Pon las palabras en el orden correcto' },
+    { id: 'escuchar', emo: '🎧', nombre: 'Escuchar', desc: 'Oye la frase y elige su significado' },
+    { id: 'escena', emo: '💼', nombre: 'Responde en el trabajo', desc: 'Situaciones reales: ¿qué dirías?' }
+  ];
+  var JUEGOS_CON_ESTRELLAS = JUEGOS.filter(function (j) { return j.id !== 'aprender'; });
+
+  function estrellasDe(nivel, juego) { return S.mejores[nivel + '.' + juego] || 0; }
+  function estrellasHtml(n) {
+    var s = '';
+    for (var i = 1; i <= 3; i++) s += '<span class="' + (i <= n ? '' : 'v') + '">★</span>';
+    return s;
+  }
+  function siguienteNivel() {
+    var i = ORDEN_NIVELES.indexOf(S.nivel);
+    return (i >= 0 && i < ORDEN_NIVELES.length - 1) ? ORDEN_NIVELES[i + 1] : null;
+  }
+  function puedeSubir() {
+    if (!siguienteNivel()) return false;
+    return JUEGOS_CON_ESTRELLAS.every(function (j) { return estrellasDe(S.nivel, j.id) >= 2; });
+  }
+
+  /* ---------- Pantallas ---------- */
+  var G = null; // partida en curso
+
+  function pintarSimple(html) {
+    app.innerHTML = html;
+    window.scrollTo(0, 0);
+  }
+
+  function elegirNivel() {
+    G = null;
+    var tarjetas = ORDEN_NIVELES.map(function (k) {
+      var n = C.niveles[k];
+      return '<button class="nivel" data-n="' + esc(k) + '"><span class="emo">' + esc(n.emoji) + '</span>' +
+        '<span class="txt"><b>' + esc(n.nombre) + '</b><small>' + esc(n.desc) + '</small></span></button>';
+    }).join('');
+    pintarSimple(
+      '<div class="wrap">' +
+        '<h1>¡Hola! 👋</h1>' +
+        '<p class="sub">Elige por dónde empezar. Si dudas, empieza por el fácil: puedes cambiar de nivel cuando quieras.</p>' +
+        '<div class="lista">' + tarjetas + '</div>' +
+        (S.nivel ? '<p class="pie"><button class="link" id="volver">Volver</button></p>' : '') +
+      '</div>'
+    );
+    $$('.nivel').forEach(function (b) {
+      b.onclick = function () { S.nivel = b.dataset.n; save(); inicio(); };
+    });
+    var v = $('#volver');
+    if (v) v.onclick = inicio;
+  }
+
+  function inicio() {
+    G = null;
+    if (!S.nivel) return elegirNivel();
+    var L = C.niveles[S.nivel];
+    var r = rachaActual();
+    var subir = puedeSubir();
+    var sig = siguienteNivel();
+
+    var lista = JUEGOS.map(function (j) {
+      var est = j.id === 'aprender' ? '' : '<span class="est">' + estrellasHtml(estrellasDe(S.nivel, j.id)) + '</span>';
+      return '<button class="juego" data-j="' + j.id + '"><span class="emo">' + j.emo + '</span>' +
+        '<span class="txt"><b>' + esc(j.nombre) + '</b><small>' + esc(j.desc) + '</small></span>' + est + '</button>';
+    }).join('');
+
+    pintarSimple(
+      '<div class="wrap">' +
+        '<h1>English at Work</h1>' +
+        '<p class="sub">Practica el inglés que usarás en el trabajo</p>' +
+        '<div class="stats">' +
+          '<span class="chip">⭐ ' + S.puntos + ' puntos</span>' +
+          '<span class="chip">🔥 Racha: ' + r + (r === 1 ? ' día' : ' días') + '</span>' +
+        '</div>' +
+        '<div class="card nivelbox"><div>' + esc(L.emoji) + ' Nivel <b>' + esc(L.nombre) + '</b></div>' +
+          '<button class="link" id="cambiar">Cambiar nivel</button></div>' +
+        (subir ? '<div class="card subir"><b>🎉 ¡Dominas este nivel!</b><p>Ya tienes al menos 2 estrellas en todos los juegos. ¿Probamos el siguiente?</p>' +
+          '<button class="btn" id="subir">Subir a ' + esc(C.niveles[sig].nombre) + '</button></div>' : '') +
+        '<div class="lista">' + lista + '</div>' +
+        '<p class="pie"><button class="link" id="borrar">Borrar mi progreso</button></p>' +
+      '</div>'
+    );
+    $$('.juego').forEach(function (b) { b.onclick = function () { empezar(b.dataset.j); }; });
+    $('#cambiar').onclick = elegirNivel;
+    var bs = $('#subir');
+    if (bs) bs.onclick = function () { S.nivel = sig; save(); inicio(); };
+    $('#borrar').onclick = function () {
+      if (confirm('¿Seguro? Se borrarán tus puntos, estrellas y racha.')) { S = def(); save(); inicio(); }
+    };
+  }
+
+  function fila(en, es) {
+    return '<button class="fila" data-t="' + esc(en) + '"><span><b>' + esc(en) + '</b><small>' + esc(es) + '</small></span><span class="ico">🔊</span></button>';
+  }
+
+  function aprender() {
+    var L = C.niveles[S.nivel];
+    pintarSimple(
+      '<div class="wrap">' +
+        '<div class="top"><button class="salir" id="salir" aria-label="Volver">←</button><h2 class="tit">Aprender · ' + esc(L.nombre) + '</h2></div>' +
+        '<p class="sub">Toca cualquier fila para escuchar cómo se pronuncia.</p>' +
+        '<h3>Vocabulario</h3>' +
+        '<div class="filas">' + L.vocab.map(function (v) { return fila(v.en, v.es); }).join('') + '</div>' +
+        '<h3>Frases útiles</h3>' +
+        '<div class="filas">' + L.escuchar.map(function (f) { return fila(f.en, f.o[f.a]); }).join('') + '</div>' +
+      '</div>'
+    );
+    $('#salir').onclick = inicio;
+    $$('.fila').forEach(function (b) { b.onclick = function () { decir(b.dataset.t); }; });
+  }
+
+  /* ---------- Motor de partida ---------- */
+  function empezar(tipo) {
+    if (tipo === 'aprender') return aprender();
+    if (tipo === 'escuchar' && !hayVoz) {
+      toast('Tu navegador no puede reproducir voz. Prueba con Chrome o Safari.');
+      return;
+    }
+    var L = C.niveles[S.nivel];
+    var qs;
+    if (tipo === 'match') qs = [{ pares: sample(L.vocab, 6) }];
+    else if (tipo === 'cloze') qs = sample(L.cloze, 5);
+    else if (tipo === 'orden') qs = sample(L.orden, 5);
+    else if (tipo === 'escuchar') qs = sample(L.escuchar, 5);
+    else qs = sample(L.escenarios, 4);
+
+    G = {
+      tipo: tipo, qs: qs, i: 0, vidas: 3, aciertos: 0, puntos: 0, hechos: 0,
+      total: tipo === 'match' ? qs[0].pares.length : qs.length
+    };
+    siguiente();
+  }
+
+  function vidasHtml() {
+    var s = '';
+    for (var i = 0; i < 3; i++) s += (i < G.vidas ? '❤️' : '🖤');
+    return s;
+  }
+
+  function pintar(inner) {
+    var hechos = G.tipo === 'match' ? G.hechos : G.i;
+    var pct = Math.round(hechos / G.total * 100);
+    app.innerHTML =
+      '<div class="wrap">' +
+        '<div class="top">' +
+          '<button class="salir" id="salir" aria-label="Salir">✕</button>' +
+          '<div class="bar"><i style="width:' + pct + '%"></i></div>' +
+          '<div class="vidas" id="vidas">' + vidasHtml() + '</div>' +
+        '</div>' + inner +
+      '</div>';
+    window.scrollTo(0, 0);
+    $('#salir').onclick = function () {
+      if (confirm('¿Salir de esta ronda? Perderás el avance de la ronda.')) inicio();
+    };
+  }
+
+  function siguiente() {
+    if (G.vidas <= 0 || (G.tipo !== 'match' && G.i >= G.qs.length)) return fin();
+    var q = G.qs[G.i];
+    if (G.tipo === 'cloze') jCloze(q);
+    else if (G.tipo === 'orden') jOrden(q);
+    else if (G.tipo === 'escuchar') jEscuchar(q);
+    else if (G.tipo === 'escena') jEscena(q);
+    else jMatch(q);
+  }
+
+  function bloquear() { $$('.op').forEach(function (b) { b.disabled = true; }); }
+  function marcar(valor) {
+    $$('.op').forEach(function (b) { if (b.dataset.v === valor) b.classList.add('ok'); });
+  }
+
+  function responder(ok, msg, audio) {
+    if (ok) { G.aciertos++; G.puntos += 10; } else { G.vidas--; }
+    $('#vidas').innerHTML = vidasHtml();
+    $('.bar i').style.width = Math.round((G.i + 1) / G.total * 100) + '%';
+    var ultima = G.vidas <= 0 || G.i >= G.qs.length - 1;
+    $('#fb').innerHTML =
+      '<div class="fbbox ' + (ok ? 'bien' : 'mal') + '">' +
+        '<b>' + (ok ? '¡Correcto! +10 ⭐' : 'Casi…') + '</b>' +
+        '<p>' + esc(msg || '') + '</p>' +
+        (audio ? '<button class="btn sec peq" id="oir">🔊 Escúchalo</button>' : '') +
+        '<button class="btn" id="cont">' + (ultima ? 'Ver resultado' : 'Continuar') + '</button>' +
+      '</div>';
+    if (audio) $('#oir').onclick = function () { decir(audio); };
+    $('#cont').onclick = function () { G.i++; siguiente(); };
+    $('#fb').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  /* --- Completar huecos --- */
+  function jCloze(q) {
+    var partes = q.t.split('___');
+    var opts = shuffle(q.o);
+    pintar(
+      '<p class="consigna">Completa la frase</p>' +
+      '<div class="frase">' + esc(partes[0]) + '<span class="hueco" id="hueco">_____</span>' + esc(partes[1] || '') + '</div>' +
+      '<div class="opciones">' + opts.map(function (o) {
+        return '<button class="op" data-v="' + esc(o) + '">' + esc(o) + '</button>';
+      }).join('') + '</div>' +
+      '<div id="fb"></div>'
+    );
+    $$('.op').forEach(function (b) {
+      b.onclick = function () {
+        var ok = b.dataset.v === q.a;
+        bloquear();
+        b.classList.add(ok ? 'ok' : 'mal');
+        if (!ok) marcar(q.a);
+        $('#hueco').textContent = q.a;
+        responder(ok, q.es, q.t.replace('___', q.a));
+      };
+    });
+  }
+
+  /* --- Ordenar frases --- */
+  function jOrden(q) {
+    var palabras = q.en.split(' ');
+    var banco = shuffle(palabras.map(function (w, i) { return { id: i, w: w }; }));
+    if (palabras.length > 1 && banco.map(function (x) { return x.w; }).join(' ') === q.en) banco = shuffle(banco);
+    var puesto = [];
+    var cerrado = false;
+
+    pintar(
+      '<p class="consigna">Ordena la frase</p>' +
+      '<p class="trad">' + esc(q.es) + '</p>' +
+      '<div class="zona" id="zona"></div>' +
+      '<div class="pal" id="pal"></div>' +
+      '<button class="btn" id="comprobar" disabled>Comprobar</button>' +
+      '<div id="fb"></div>'
+    );
+
+    function ficha(x) {
+      return '<button class="ficha" data-id="' + x.id + '"' + (cerrado ? ' disabled' : '') + '>' + esc(x.w) + '</button>';
+    }
+    function dib() {
+      $('#zona').innerHTML = puesto.map(ficha).join('');
+      $('#pal').innerHTML = banco.map(ficha).join('');
+      $('#comprobar').disabled = banco.length > 0 || cerrado;
+      if (cerrado) return;
+      $$('#zona .ficha').forEach(function (b) {
+        b.onclick = function () {
+          var k = puesto.findIndex(function (x) { return String(x.id) === b.dataset.id; });
+          banco.push(puesto.splice(k, 1)[0]);
+          dib();
+        };
+      });
+      $$('#pal .ficha').forEach(function (b) {
+        b.onclick = function () {
+          var k = banco.findIndex(function (x) { return String(x.id) === b.dataset.id; });
+          puesto.push(banco.splice(k, 1)[0]);
+          dib();
+        };
+      });
+    }
+    dib();
+
+    $('#comprobar').onclick = function () {
+      cerrado = true;
+      var ok = puesto.map(function (x) { return x.w; }).join(' ') === q.en;
+      $('#zona').classList.add(ok ? 'zok' : 'zmal');
+      $('#comprobar').style.display = 'none';
+      dib();
+      responder(ok, ok ? q.es : 'La frase correcta es: «' + q.en + '» (' + q.es + ')', q.en);
+    };
+  }
+
+  /* --- Escuchar --- */
+  function jEscuchar(q) {
+    var correcta = q.o[q.a];
+    var opts = shuffle(q.o);
+    pintar(
+      '<p class="consigna">Escucha y elige qué significa</p>' +
+      '<div class="centro">' +
+        '<button class="vozgrande" id="play" aria-label="Escuchar">🔊<span>Escuchar</span></button><br>' +
+        '<button class="link" id="lento">🐢 Más despacio</button>' +
+      '</div>' +
+      '<div class="opciones">' + opts.map(function (o) {
+        return '<button class="op" data-v="' + esc(o) + '">' + esc(o) + '</button>';
+      }).join('') + '</div>' +
+      '<div id="fb"></div>'
+    );
+    $('#play').onclick = function () { decir(q.en, false); };
+    $('#lento').onclick = function () { decir(q.en, true); };
+    $$('.op').forEach(function (b) {
+      b.onclick = function () {
+        var ok = b.dataset.v === correcta;
+        bloquear();
+        b.classList.add(ok ? 'ok' : 'mal');
+        if (!ok) marcar(correcta);
+        responder(ok, '«' + q.en + '» significa: ' + correcta, q.en);
+      };
+    });
+  }
+
+  /* --- Responde en el trabajo --- */
+  function jEscena(q) {
+    var idx = shuffle(q.o.map(function (o, i) { return i; }));
+    var buena = q.o.findIndex(function (o) { return o.ok; });
+    pintar(
+      '<p class="ctx">' + esc(q.ctx) + '</p>' +
+      '<div class="burbuja"><span>“' + esc(q.say) + '”</span>' +
+        '<button class="vozbtn" id="oir0" aria-label="Escuchar">🔊</button></div>' +
+      '<p class="consigna">¿Qué respondes?</p>' +
+      '<div class="opciones">' + idx.map(function (i) {
+        return '<button class="op" data-i="' + i + '">' + esc(q.o[i].t) + '</button>';
+      }).join('') + '</div>' +
+      '<div id="fb"></div>'
+    );
+    $('#oir0').onclick = function () { decir(q.say); };
+    $$('.op').forEach(function (b) {
+      b.onclick = function () {
+        var i = parseInt(b.dataset.i, 10);
+        var ok = !!q.o[i].ok;
+        bloquear();
+        b.classList.add(ok ? 'ok' : 'mal');
+        if (!ok) {
+          $$('.op').forEach(function (x) { if (parseInt(x.dataset.i, 10) === buena) x.classList.add('ok'); });
+        }
+        responder(ok, q.o[i].why + (ok ? '' : ' Mejor respuesta: «' + q.o[buena].t + '»'), q.o[buena].t);
+      };
+    });
+  }
+
+  /* --- Emparejar --- */
+  function jMatch(q) {
+    var pares = q.pares;
+    var izq = shuffle(pares.map(function (p, i) { return i; }));
+    var der = shuffle(pares.map(function (p, i) { return i; }));
+    pintar(
+      '<p class="consigna">Une cada palabra con su significado</p>' +
+      '<p class="trad">Toca una palabra en inglés (se oye) y después su significado.</p>' +
+      '<div class="cols">' +
+        '<div class="col">' + izq.map(function (i) {
+          return '<button class="m" data-s="en" data-k="' + i + '">' + esc(pares[i].en) + '</button>';
+        }).join('') + '</div>' +
+        '<div class="col">' + der.map(function (i) {
+          return '<button class="m" data-s="es" data-k="' + i + '">' + esc(pares[i].es) + '</button>';
+        }).join('') + '</div>' +
+      '</div>' +
+      '<div id="fb"></div>'
+    );
+    var sel = null;
+    $$('.m').forEach(function (b) {
+      b.onclick = function () {
+        if (b.classList.contains('hecho') || G.vidas <= 0) return;
+        var s = b.dataset.s;
+        var k = parseInt(b.dataset.k, 10);
+        if (s === 'en') decir(pares[k].en);
+
+        if (sel && sel.b === b) { b.classList.remove('sel'); sel = null; return; }
+        if (!sel || sel.s === s) {
+          if (sel) sel.b.classList.remove('sel');
+          sel = { b: b, s: s, k: k };
+          b.classList.add('sel');
+          return;
+        }
+        var a = sel;
+        sel = null;
+        a.b.classList.remove('sel');
+
+        if (a.k === k) {
+          a.b.classList.add('hecho');
+          b.classList.add('hecho');
+          G.aciertos++; G.puntos += 10; G.hechos++;
+          $('.bar i').style.width = Math.round(G.hechos / G.total * 100) + '%';
+          if (G.hechos >= G.total) {
+            $('#fb').innerHTML =
+              '<div class="fbbox bien"><b>¡Todas emparejadas! 🎉</b>' +
+              '<button class="btn" id="cont">Ver resultado</button></div>';
+            $('#cont').onclick = fin;
+            $('#fb').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        } else {
+          G.vidas--;
+          $('#vidas').innerHTML = vidasHtml();
+          [a.b, b].forEach(function (x) {
+            x.classList.add('fallo');
+            setTimeout(function () { x.classList.remove('fallo'); }, 450);
+          });
+          if (G.vidas <= 0) setTimeout(fin, 700);
+        }
+      };
+    });
+  }
+
+  /* ---------- Resultado ---------- */
+  function fin() {
+    var perdio = G.vidas <= 0;
+    var est;
+    if (perdio) est = 0;
+    else if (G.tipo === 'match') est = Math.max(1, G.vidas);
+    else {
+      var pct = G.aciertos / G.total;
+      est = pct >= 0.9 ? 3 : (pct >= 0.6 ? 2 : 1);
+    }
+
+    S.puntos += G.puntos;
+    S.jugadas++;
+    tocarRacha();
+    var k = S.nivel + '.' + G.tipo;
+    if ((S.mejores[k] || 0) < est) S.mejores[k] = est;
+    save();
+
+    var titulos = ['Se acabaron las vidas', 'Buen intento', '¡Muy bien!', '¡Excelente!'];
+    var mensajes = [
+      'No pasa nada: se aprende repitiendo. ¡Vuelve a intentarlo!',
+      'Has terminado la ronda. Repítela para mejorar tus estrellas.',
+      'Un poco más de práctica y lo tendrás dominado.',
+      'Eso ya suena a inglés de oficina de verdad.'
+    ];
+    var tipo = G.tipo;
+    var estrellas = [1, 2, 3].map(function (n) {
+      return '<span class="' + (n <= est ? 'on' : '') + '">★</span>';
+    }).join('');
+    var r = rachaActual();
+    var subir = puedeSubir();
+    var sig = siguienteNivel();
+
+    pintarSimple(
+      '<div class="wrap fin">' +
+        '<div class="estrellas">' + estrellas + '</div>' +
+        '<h2>' + titulos[est] + '</h2>' +
+        '<p>' + mensajes[est] + '</p>' +
+        '<div class="card resumen">+' + G.puntos + ' puntos · ' + G.aciertos + ' de ' + G.total + ' aciertos<br>🔥 Racha: ' + r + (r === 1 ? ' día' : ' días') + '</div>' +
+        (subir ? '<div class="card subir"><b>🎉 ¡Ya dominas este nivel!</b>' +
+          '<button class="btn" id="subir">Subir a ' + esc(C.niveles[sig].nombre) + '</button></div>' : '') +
+        '<button class="btn" id="otra">Jugar otra vez</button>' +
+        '<button class="btn sec" id="menu">Volver al menú</button>' +
+      '</div>'
+    );
+    $('#otra').onclick = function () { empezar(tipo); };
+    $('#menu').onclick = inicio;
+    var bs = $('#subir');
+    if (bs) bs.onclick = function () { S.nivel = sig; save(); inicio(); };
+  }
+
+  inicio();
+})();
+</script>
+</body>
+</html>
